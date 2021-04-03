@@ -3,4 +3,5 @@ vendor/
 .code/
 app/views/cache/*.php
 
+*.json
 composer.lock
