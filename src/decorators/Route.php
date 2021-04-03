@@ -29,7 +29,7 @@ class Route extends AttributeBase {
 
     public function manage(): void {
         if ($this->isMethod()) {
-            \Steampixel\Route::add($this->route, function(...$parameters) {
+            \DI\router\Route::add($this->route, function(...$parameters) {
                 $injectionContainer = new InjectionContainer();
                 $obj = $injectionContainer->injectInConstruct($this->target, ...$parameters);
                 $headerBuilder = HeaderBuilder::getBuilder($this->target, $this->methodName);
@@ -60,10 +60,10 @@ class Route extends AttributeBase {
                 $route = $this->route;
                 if (in_array($method, ['post', 'put', 'delete'])) $route .= '/([0-9]*)';
 
-                \Steampixel\Route::add($route, function(...$parameters) use($method) {
+                \DI\router\Route::add($route, function(...$parameters) use($method) {
                     $injectionContainer = new InjectionContainer();
                     $obj = $injectionContainer->injectInConstruct($this->target, ...$parameters);
-                    $headerBuilder = HeaderBuilder::getBuilder($this->target, $this->methodName);
+                    $headerBuilder = HeaderBuilder::getBuilder($this->target, 'global');
 
                     $result = $injectionContainer->injectIntoMethod($obj, $method, ...$parameters);
                     if (is_array($result) && isset(Views::instances()[$this->target][$method])) {

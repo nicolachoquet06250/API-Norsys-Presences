@@ -3,7 +3,7 @@
 namespace DI\helpers;
 
 use DI\interfaces\ViewAdapter;
-use  DI\enums\ViewEngines;
+use DI\enums\ViewEngines;
 
 class Views implements ViewAdapter {
     private ViewAdapter $viewEngine;

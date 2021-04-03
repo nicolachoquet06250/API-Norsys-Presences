@@ -6,7 +6,7 @@ use DI\decorators\Injectable;
 
 #[Injectable(\DI\interfaces\Test::class)]
 class Test implements \DI\interfaces\Test {
-    public function myFunc(Application $app) {
+    public function myFunc(Application $app): string {
         return $app->test();
     }
 }

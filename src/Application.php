@@ -3,8 +3,9 @@
 namespace DI;
 
 use DI\decorators\Injectable;
-use DI\router\Router;
-use Steampixel\Route;
+use DI\router\{
+    Router, Route
+};
 
 #[Injectable]
 class Application {
