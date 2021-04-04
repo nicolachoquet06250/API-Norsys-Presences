@@ -14,23 +14,34 @@ try {
     ConstCreator::create(
         __ROOT__ . '/env.json', 
         required: [
-            "VIEW_ENGINE", 
-            "VIEW_DIR", 
-            "VIEW_CACHE_DIR"
+            "VIEW_ENGINE", "VIEW_DIR", "VIEW_CACHE_DIR",
+            "DB_NAME", "DB_HOST", "DB_PORT", "DB_LOGIN", "DB_PASSWORD"
         ]
     );
-    DI::analyze(__ROOT__ . '/src');
 
-    $app = new Application();
-    $app->run();
-} catch (Exception $e) {
-    http_response_code(500);
-    
+    try {
+        DI::analyze(__ROOT__ . '/src');
+
+        $app = new Application();
+        $app->run();
+    } catch (Exception $e) {
+        http_response_code(500);
+        
+        if (constant('DEBUG')) {
+            dd([
+                'error' => true,
+                'code' => 500,
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTrace()
+            ]);
+        }
+    }
+} catch(Exception $e) {
     echo '<pre>' . json_encode([
-        'error' => 500,
-        'message' => $e->getMessage(),
-        'line' => $e->getLine(),
-        'file' => $e->getFile(),
-        'trace' => $e->getTrace()
+        'error' => true,
+        'code' => 500,
+        'message' => $e->getMessage()
     ], JSON_PRETTY_PRINT) . '</pre>';
 }

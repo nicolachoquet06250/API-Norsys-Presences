@@ -4,7 +4,9 @@
         "php": "8.*",
         "steampixel/simple-php-router": "*",
         "jenssegers/blade": "^1.4",
-        "smarty/smarty": "^3.1"
+        "smarty/smarty": "^3.1",
+        "spipu/html2pdf": "^5.2.2",
+        "phpmailer/phpmailer": "^6.4"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.2"
@@ -13,5 +15,11 @@
         "psr-4": {
             "DI\\": "src"
         }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "composer run start"
+        ],
+        "start": "php -S localhost:8001 -t app"
     }
 }

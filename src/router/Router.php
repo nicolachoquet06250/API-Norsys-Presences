@@ -7,6 +7,7 @@ use ReflectionMethod;
 use DI\decorators\{
     CustomIf,
     Directive,
+    Json,
     MethodNotAllowed,
     PageNotFound,
     Route, Title,
@@ -19,6 +20,7 @@ use DI\helpers\{
 
 class Router {
     private static array $enabledAttributes = [
+        Json::class,
         Route::class,
         PageNotFound::class,
         MethodNotAllowed::class,
@@ -31,7 +33,7 @@ class Router {
     ];
 
     public static function analyse() {
-        DirAnalyser::analyse(realpath(__DIR__.'/..'), function($root, $elem) {
+        DirAnalyser::analyse(realpath(__ROOT__.'/src'), function($root, $elem) {
             $class = str_replace(
                 [ realpath(__ROOT__), 'src', '/', '.php' ], 
                 [ '', 'DI', '\\', '' ], 
