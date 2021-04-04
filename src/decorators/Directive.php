@@ -15,10 +15,10 @@ class Directive extends AttributeBase {
     ) {}
 
     public function manage(): void {
-        if (file_exists(__ROOT__ . '/' . explode('::', str_replace(['DI', '\\'], ['src', '/'], 'DI\views\\' . strtolower(empty($this->engine) ? VIEW_ENGINE : $this->engine) . '\custom\\' . $this->callback))[0] . '.php')) {
-            $callback = 'DI\views\\' . strtolower(empty($this->engine) ? VIEW_ENGINE : $this->engine) . '\custom\\' . $this->callback;
+        if (file_exists(__ROOT__ . '/' . explode('::', str_replace(['DI', '\\'], ['src', '/'], 'DI\views\\' . strtolower(empty($this->engine) ? constant('VIEW_ENGINE') : $this->engine) . '\custom\\' . $this->callback))[0] . '.php')) {
+            $callback = 'DI\views\\' . strtolower(empty($this->engine) ? constant('VIEW_ENGINE') : $this->engine) . '\custom\\' . $this->callback;
 
-            Views::addCustomizedElement('directive', $this->target, $this->isMethod() ? $this->methodName : 'global', $this->name, $callback, empty($this->engine) ? VIEW_ENGINE : $this->engine);
+            Views::addCustomizedElement('directive', $this->target, $this->isMethod() ? $this->methodName : 'global', $this->name, $callback, empty($this->engine) ? constant('VIEW_ENGINE') : $this->engine);
         }
     }
 }

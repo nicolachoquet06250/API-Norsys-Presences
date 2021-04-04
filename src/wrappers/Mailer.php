@@ -3,8 +3,9 @@
 namespace DI\wrappers;
 
 use DI\decorators\Injectable;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\{
+	SMTP, PHPMailer
+};
 
 #[Injectable]
 class Mailer {

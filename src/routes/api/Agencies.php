@@ -3,10 +3,10 @@
 namespace DI\routes\api;
 
 use PDO;
-use Exception;
 use DI\wrappers\Mysql;
-use DI\decorators\Json;
-use DI\decorators\Route;
+use DI\decorators\{
+	Json, Route
+};
 
 class Agencies {
 	#[Json]

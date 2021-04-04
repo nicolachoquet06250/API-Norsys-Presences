@@ -4,9 +4,10 @@ namespace DI\routes\api;
 
 use PDO;
 use DateTime;
-use DI\decorators\Json;
+use DI\decorators\{
+	Json, Route
+};
 use DI\wrappers\Mysql;
-use DI\decorators\Route;
 
 class Search {
 

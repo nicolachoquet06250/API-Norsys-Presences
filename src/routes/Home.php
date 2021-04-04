@@ -3,7 +3,6 @@
 namespace DI\routes;
 
 use DateTime;
-use PDO;
 use DI\decorators\{
     Directive,
     Route, Title,

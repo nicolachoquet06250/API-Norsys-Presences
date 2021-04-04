@@ -68,7 +68,7 @@ class Views implements ViewAdapter {
     public static function addInstance(string $target, string $method, string $tpl): self {
         $method = $method === '' ? 'global' : $method;
 
-        static::$instances[$target][$method] = (new Views(VIEW_DIR, VIEW_CACHE_DIR, VIEW_ENGINE))->setTpl($tpl);
+        static::$instances[$target][$method] = (new Views(constant('VIEW_DIR'), constant('VIEW_CACHE_DIR'), constant('VIEW_ENGINE')))->setTpl($tpl);
         return static::$instances[$target][$method];
     }
 

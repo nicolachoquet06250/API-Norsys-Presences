@@ -6,9 +6,9 @@ use PDO;
 use Exception;
 use DI\router\Context;
 use DI\wrappers\Mysql;
-use DI\decorators\Json;
-use DI\decorators\Route;
-use DI\decorators\Title;
+use DI\decorators\{
+	Json, Route, Title
+};
 
 #[Route('/api/users')]
 #[Title('gestion des utilisateurs')]

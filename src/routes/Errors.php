@@ -2,8 +2,10 @@
 
 namespace DI\routes;
 
-use DI\decorators\MethodNotAllowed;
-use DI\decorators\PageNotFound;
+use DI\decorators\{
+	MethodNotAllowed, 
+	PageNotFound
+};
 
 class Errors {
 

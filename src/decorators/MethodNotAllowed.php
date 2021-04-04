@@ -3,9 +3,10 @@
 namespace DI\decorators;
 
 use Attribute;
-use DI\helpers\Views;
+use DI\helpers\{
+	Views, HeaderBuilder
+};
 use DI\bases\AttributeBase;
-use DI\helpers\HeaderBuilder;
 use DI\injection\InjectionContainer;
 
 #[Attribute(Attribute::TARGET_METHOD)]

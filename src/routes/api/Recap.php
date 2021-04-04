@@ -5,10 +5,12 @@ namespace DI\routes\api;
 use PDO;
 use Exception;
 use DI\router\Context;
-use DI\wrappers\Mysql;
-use DI\decorators\Json;
-use DI\wrappers\Mailer;
-use DI\decorators\Route;
+use DI\wrappers\{
+	Mysql, Mailer
+};
+use DI\decorators\{
+	Json, Route
+};
 
 class Recap {
 	public function __construct(
