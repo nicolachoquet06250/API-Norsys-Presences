@@ -10,12 +10,13 @@ use DI\wrappers\{
 	Mysql, Mailer
 };
 use DI\decorators\{
-	Json, Route
+	Json, Route,
+    Timer
 };
 use Spipu\Html2Pdf\Html2Pdf;
 
 class Export {
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/export/([0-9]{0,4}\-[0-9]{0,2}\-[0-9]{0,2})', method: 'post')]
 	public function export_presences_history(Context $context, Mysql $db, Mailer $mailer, string $date) {
 		$body = $context->body();
@@ -137,7 +138,7 @@ class Export {
 		  'pdf_path' => '/assets/pdfs/export-norsys-fiche-presence-'.$date.'.pdf'
 		];
 		
-		$mail = $mailer->send($email, $html, 'Export feuille de présence Norsys '.$date, __ROOT__.'/app'.$result['pdf_path']);
+		$mail = \DI\helpers\Timer::create($mailer, 'send', $email, $html, 'Export feuille de présence Norsys ' . $date, __ROOT__ . '/app' . $result['pdf_path']);
 		
 		if ($mail === true) {
 			unlink(__ROOT__.'/app'.$result['pdf_path']);

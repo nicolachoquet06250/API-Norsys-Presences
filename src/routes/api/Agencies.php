@@ -5,11 +5,12 @@ namespace DI\routes\api;
 use PDO;
 use DI\wrappers\Mysql;
 use DI\decorators\{
-	Json, Route
+	Json, Route,
+    Timer
 };
 
 class Agencies {
-	#[Json]
+	#[Timer] //#[Json]
 	#[Route('/api/agencies')]
 	public function get_all_agencies(Mysql $db) {
 		$request = $db->query('SELECT * FROM `agencies`');

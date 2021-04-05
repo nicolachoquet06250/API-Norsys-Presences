@@ -17,7 +17,11 @@ class ConstCreator {
 
 					preg_match_all('|([\\\\A-Za-z]+\:\:[A-Za-z]+)$|D', $value, $matches);
 					$value = str_replace($matches[1], array_map(fn($c) => eval('return ' . $c . ';'), $matches[1]), $value);
-					//dump($const, $value);
+					
+					if ($value === 'true' || $value === 'false') {
+						$value = $value === 'true';
+					}
+					
 					define($const, $value);
 				}
 			}

@@ -5,13 +5,14 @@ namespace DI\routes\api;
 use PDO;
 use DateTime;
 use DI\decorators\{
-	Json, Route
+	Json, Route,
+    Timer
 };
 use DI\wrappers\Mysql;
 
 class Search {
 
-	#[Json]
+	#[Timer] //#[Json]
 	#[Route('/api/search/history')]
 	public function get_full_history(Mysql $db) {
 		$request = $db->query('SELECT DATE_FORMAT(arrival_date, \'%Y-%m-%d\') arrival_date FROM `presences` GROUP BY DATE_FORMAT(arrival_date, \'%Y-%m-%d\') ORDER BY arrival_date DESC ');
@@ -22,7 +23,7 @@ class Search {
 		return $results;
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/search/history/([0-9]{0,4}\-[0-9]{0,2}\-[0-9]{0,2})')]
 	public function get_history_per_date(Mysql $db, string $date) {
 		$request = $db->query('SELECT firstname, lastname, email, arrival_date, departure_date FROM `presences` INNER JOIN `users` ON `presences`.user_id = `users`.id');

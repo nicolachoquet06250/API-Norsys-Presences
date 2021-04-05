@@ -48,8 +48,7 @@ class Route extends AttributeBase {
                     $isJson = in_array($this->method, $isJsonForMethods);
                 }
 
-                $injectionContainer = new InjectionContainer();
-                $obj = $injectionContainer->injectInConstruct($this->target, ...$parameters);
+                $obj = \DI\helpers\Timer::create($this->target, '__construct', ...$parameters);
                 $headerBuilder = HeaderBuilder::getBuilder($this->target, $this->methodName);
 
                 foreach (Views::customizedElement() as $engine => $detail) {
@@ -60,19 +59,19 @@ class Route extends AttributeBase {
                     }
                 }
 
-                $result = $injectionContainer->injectIntoMethod($obj, $this->methodName, ...$parameters);
+                $result = \DI\helpers\Timer::create($obj, $this->methodName, ...$parameters);
                 if (is_array($result) && isset(Views::instances()[$this->target][$this->methodName])) {
                     /** @var ViewAdapter $view */
                     $view = Views::instances()[$this->target][$this->methodName];
                     $result = array_merge($headerBuilder->build(forViewEngine: true), $result);
-                    echo $view->make($result);
+                    echo \DI\helpers\Timer::create($view, 'make', $result);
                 } elseif (is_array($result) && !isset(Views::instances()[$this->target][$this->methodName]) && !$isJson) {
                     dump($result);
                 } elseif (is_array($result) && !isset(Views::instances()[$this->target][$this->methodName]) && $isJson) {
                     header('Content-Type: application/json');
                     echo json_encode($result);
                 } elseif(is_string($result)) {
-                    echo $headerBuilder->build();
+                    echo \DI\helpers\Timer::create($headerBuilder, 'build');
                     echo $result;
                 }
             }, (count($this->methods) > 1 || $this->methods[0] !== 'get' ? $this->methods : $this->method));
@@ -86,22 +85,22 @@ class Route extends AttributeBase {
                     $isJson = in_array($this->method, $isJsonForMethods);
 
                     $injectionContainer = new InjectionContainer();
-                    $obj = $injectionContainer->injectInConstruct($this->target, ...$parameters);
+                    $obj = \DI\helpers\Timer::create($this->target, '__construct', ...$parameters);
                     $headerBuilder = HeaderBuilder::getBuilder($this->target, 'global');
 
-                    $result = $injectionContainer->injectIntoMethod($obj, $method, ...$parameters);
+                    $result = \DI\helpers\Timer::create($obj, $method, ...$parameters);
                     if (is_array($result) && isset(Views::instances()[$this->target][$method])) {
                         /** @var ViewAdapter $view */
                         $view = Views::instances()[$this->target][$method];
                         $result = array_merge($headerBuilder->build(forViewEngine: true), $result);
-                        echo $view->make($result);
+                        \DI\helpers\Timer::create($view, 'make', $result);
                     } elseif (is_array($result) && !isset(Views::instances()[$this->target]['global']) && !$isJson) {
                         dump($result);
                     } elseif (is_array($result) && !isset(Views::instances()[$this->target]['global']) && $isJson) {
                         header('Content-Type: application/json');
                         echo json_encode($result);
                     } elseif(is_string($result)) {
-                        echo $headerBuilder->build();
+                        echo \DI\helpers\Timer::create($headerBuilder, 'build');
                         echo $result;
                     }
                 }, $method);

@@ -3,12 +3,14 @@
 namespace DI\wrappers;
 
 use DI\decorators\Injectable;
+use DI\decorators\Timer;
 use PHPMailer\PHPMailer\{
 	SMTP, PHPMailer
 };
 
 #[Injectable]
 class Mailer {
+	#[Timer]
 	public function send(array $to, string $body, string $object, ...$attachments) {
 		if (!defined('EMAIL_HOST') || !defined('EMAIL_PORT') || !defined('EMAIL')|| !defined('EMAIL_PASSWORD') || !defined('EMAIL_NAME')) {
 			return true;

@@ -23,8 +23,7 @@ class PageNotFound extends AttributeBase {
 		\DI\router\Route::pathNotFound(function(string $path) {
 			http_response_code(404);
 
-			$injectionContainer = new InjectionContainer();
-			$obj = $injectionContainer->injectInConstruct($this->target, $path);
+			$obj = \DI\helpers\Timer::create($this->target, '__construct', $path);
 			$headerBuilder = HeaderBuilder::getBuilder($this->target, $this->methodName);
 
 			foreach (Views::customizedElement() as $engine => $detail) {
@@ -35,16 +34,16 @@ class PageNotFound extends AttributeBase {
 				}
 			}
 
-			$result = $injectionContainer->injectIntoMethod($obj, $this->methodName, $path);
+			$result = \DI\helpers\Timer::create($obj, $this->methodName, $path);
 			if (is_array($result) && isset(Views::instances()[$this->target][$this->methodName])) {
 				/** @var ViewAdapter $view */
 				$view = Views::instances()[$this->target][$this->methodName];
 				$result = array_merge($headerBuilder->build(forViewEngine: true), $result);
-				echo $view->make($result);
+				echo \DI\helpers\Timer::create($view, 'make', $result);
 			} elseif (is_array($result) && !isset(Views::instances()[$this->target][$this->methodName])) {
 				dump($result);
 			} elseif(is_string($result)) {
-				echo $headerBuilder->build();
+				echo \DI\helpers\Timer::create($headerBuilder, 'build');
 				echo $result;
 			}
 		});

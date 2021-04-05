@@ -2,6 +2,7 @@
 
 namespace DI\adapters\views;
 
+use DI\decorators\Timer;
 use DI\interfaces\ViewAdapter;
 
 class Smarty implements ViewAdapter {
@@ -13,9 +14,9 @@ class Smarty implements ViewAdapter {
         private string $cacheDir
     ) {
         $this->engine = new \Smarty();
-        $this->engine->setTemplateDir(VIEW_DIR);
-        $this->engine->setCompileDir(VIEW_CACHE_DIR);
-        $this->engine->setCacheDir(VIEW_CACHE_DIR);
+        $this->engine->setTemplateDir(constant('VIEW_DIR'));
+        $this->engine->setCompileDir(constant('VIEW_CACHE_DIR'));
+        $this->engine->setCacheDir(constant('VIEW_CACHE_DIR'));
     }
 
     public function setViewsDir(string $viewsDir): self {
@@ -38,6 +39,7 @@ class Smarty implements ViewAdapter {
         return $this;
     }
 
+    #[Timer]
     public function make(array $vars = []): string {
         foreach ($vars as $key => $value) {
             $this->assign($key, $value);

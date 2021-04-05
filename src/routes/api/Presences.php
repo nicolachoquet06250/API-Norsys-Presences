@@ -8,7 +8,8 @@ use Exception;
 use DI\router\Context;
 use DI\wrappers\Mysql;
 use DI\decorators\{
-	Json, Route
+	Json, Route,
+    Timer
 };
 
 class Presences {
@@ -16,7 +17,7 @@ class Presences {
 		private Mysql $db
 	) {}
 
-	#[Json]
+	#[Timer] //#[Json]
 	#[Route('/api/presences')]
 	public function get_presences() {
 		try {
@@ -39,7 +40,7 @@ class Presences {
 		return $arr;
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/presences/today')]
 	public function get_presences_for_today() {
 		try {
@@ -104,7 +105,7 @@ class Presences {
 		return $arr;
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/presence', method: 'post')]
 	public function add_presence(Context $context) {
 		$body = $context->body();

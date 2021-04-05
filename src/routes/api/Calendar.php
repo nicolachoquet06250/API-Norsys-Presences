@@ -7,7 +7,8 @@ use Exception;
 use DI\router\Context;
 use DI\wrappers\Mysql;
 use DI\decorators\{
-	Json, Route
+	Json, Route,
+    Timer
 };
 
 class Calendar {
@@ -16,7 +17,8 @@ class Calendar {
 		private Mysql $db
 	) {}
 
-	private function delete_reservation(): array {
+	#[Timer]
+	public function delete_reservation(): array {
 		$body = $this->context->body();
 		$user_id = $body['user_id'];
 		$date = $body['date'];
@@ -41,7 +43,8 @@ class Calendar {
 		];
 	}
 
-	private function add_reservation(): array {
+	#[Timer]
+	public function add_reservation(): array {
 		$body = $this->context->body();
 		$user_id = $body['user_id'];
 		$date = $body['date'];
@@ -66,7 +69,8 @@ class Calendar {
 		];
 	}
 
-	private function nbDaysInMonth(int|string $month , int|string $year): int {
+	#[Timer]
+	public function nbDaysInMonth(int|string $month , int|string $year): int {
 		$inMonth = $year * 12 + $month; 
 		if (($inMonth > 2037 * 12 - 1) || ($inMonth < 1970)) return 0;
 		$next_year = floor(($inMonth + 1) / 12); 
@@ -75,12 +79,13 @@ class Calendar {
 		return round(($timing / (3600 * 24))); 
 	}
 
-	private function isBisextilYear(int|string|null $year = null): bool {
+	#[Timer]
+	public function isBisextilYear(int|string|null $year = null): bool {
 		if (is_null($year)) $year = date('Y');
 		return $this->nbDaysInMonth('02', $year) === 29;
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/calendar/([0-9]{0,4})/([0-9]{0,2})')]
 	public function get_specific_month_calendar(int $year, int $month) {
 		$days = $this->nbDaysInMonth($month, $year);
@@ -152,12 +157,13 @@ class Calendar {
 		];
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/reservation', methods: ['post', 'delete'])]
 	public function create_reservation() {
 		$body = $this->context->body();
 
-		return isset($body['method']) && strtolower($body['method']) === 'delete' 
-			? $this->delete_reservation() : $this->add_reservation();
+		return \DI\helpers\Timer::create($this, 
+			(isset($body['method']) && strtolower($body['method']) === 'delete' 
+				? 'delete' : 'add') . '_reservation');
 	}
 }

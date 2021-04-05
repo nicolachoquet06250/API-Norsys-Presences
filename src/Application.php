@@ -2,13 +2,13 @@
 
 namespace DI;
 
+use DI\decorators\Timer;
 use DI\router\{
     Router, Route
 };
 
 class Application {
-    public function __construct() {}
-    
+    #[Timer]
     public function run(string $basePath = '/'): void {
         Router::analyse();
 

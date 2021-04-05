@@ -7,11 +7,12 @@ use Exception;
 use DI\router\Context;
 use DI\wrappers\Mysql;
 use DI\decorators\{
-	Json, Route
+	Json, Route,
+    Timer
 };
 
 class Login {
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/user/login', method: 'post')]
 	public function login(Context $context, Mysql $db) {
 		$body = $context->body();

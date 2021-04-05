@@ -3,9 +3,11 @@
 
 namespace DI\injection;
 
+use DI\helpers\TimerWrapperClasses;
 use ReflectionClass;
 use ReflectionObject;
 use ReflectionFunction;
+use ReflectionUnionType;
 
 class InjectionContainer {
     private static $correspondences = [];
@@ -44,13 +46,16 @@ class InjectionContainer {
         return new $class(...$param_types, ...$additional_parameters);
     }
 
-    public function injectIntoMethod($object, string $method) {
+    public function injectIntoMethod($object, string $method, ...$additional_parameters) {
         $ro = new ReflectionObject($object);
         if ($ro->hasMethod($method)) {
             $param_types = array_reduce(
                 $ro->getMethod($method)->getParameters(),
                 function ($r, $c) {
-                    if (!in_array($c->getType()->getName(), ['string', 'int', 'float', 'bool', 'array', 'object', 'callable'])) {
+                    if (get_class($c) === ReflectionUnionType::class) {
+                        dd($c->getType());
+                    }
+                    if ($c->getType() !== null && !in_array($c->getType()->getName(), ['string', 'int', 'float', 'bool', 'array', 'object', 'callable'])) {
                         if (isset(InjectionContainer::correspondences()[$c->getType()->getName()])) {
                             $r[] = $this->injectInConstruct(InjectionContainer::correspondences()[$c->getType()->getName()]);
                         } else if (isset(InjectionContainer::correspondences()['\\' . $c->getType()->getName()])) {
@@ -60,8 +65,7 @@ class InjectionContainer {
                     return $r;
                 }, []
             );
-
-            return $object->$method(...$param_types);
+            return $object->$method(...$param_types, ...$additional_parameters);
         }
         $class = $object::class;
         throw new \Exception("Method $class::$method() not found");

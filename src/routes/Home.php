@@ -7,6 +7,7 @@ use DI\decorators\{
     Directive,
     Route, Title,
     Scripts, Stylesheets,
+    Timer,
     View
 };
 use DI\enums\ViewEngines;
@@ -20,6 +21,7 @@ class Home {
         private ?int $id = null
     ) {}
 
+    #[Timer]
     #[Route('/')]
     #[Title('Mon Titre spécifique')]
     #[Stylesheets(['/assets/styles/style.css'])]
@@ -27,6 +29,7 @@ class Home {
         return 'pas d\'id => NULL';
     }
 
+    #[Timer]
     #[Route('/test/([0-9]+)')] #[Title('get 2')]
     public function get2(): string {
         return <<<HTML
@@ -36,6 +39,7 @@ class Home {
         HTML;
     }
 
+    #[Timer]
     #[Route('/test')] #[View('test')]
     #[Directive('datetime', 'Directive::datetime')]
 
@@ -47,6 +51,7 @@ class Home {
         ];
     }
 
+    #[Timer]
     #[Route('/test-2')]
     #[View('test', ViewEngines::SMARTY)]
     public function test2() {

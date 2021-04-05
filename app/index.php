@@ -6,6 +6,8 @@ error_reporting(E_ALL);
 use DI\Application;
 use DI\injection\DI;
 use DI\helpers\ConstCreator;
+use DI\helpers\Timer;
+use DI\helpers\TimerWrapperClasses;
 
 require __DIR__.'/../vendor/autoload.php';
 define('__ROOT__', realpath(__DIR__ . '/..'));
@@ -21,9 +23,11 @@ try {
 
     try {
         DI::analyze(__ROOT__ . '/src');
+        TimerWrapperClasses::analyze();
 
-        $app = new Application();
-        $app->run();
+        $app = Timer::create(Application::class, '__construct');
+        Timer::create($app, 'run');
+
     } catch (Exception $e) {
         http_response_code(500);
         

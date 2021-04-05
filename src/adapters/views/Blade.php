@@ -2,6 +2,7 @@
 
 namespace DI\adapters\views;
 
+use DI\decorators\Timer;
 use DI\interfaces\ViewAdapter;
 
 class Blade implements ViewAdapter {
@@ -36,6 +37,7 @@ class Blade implements ViewAdapter {
         return $this;
     }
 
+    #[Timer]
     public function make(array $vars = []): string {
         $view = $this->engine->make($this->tpl, $vars);
         foreach ($this->vars as $var => $value) $view->with($var, $value);

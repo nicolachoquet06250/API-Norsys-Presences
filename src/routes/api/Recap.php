@@ -9,7 +9,8 @@ use DI\wrappers\{
 	Mysql, Mailer
 };
 use DI\decorators\{
-	Json, Route
+	Json, Route,
+    Timer
 };
 
 class Recap {
@@ -17,7 +18,7 @@ class Recap {
 		private Mysql $db
 	) {}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/recap/upload', method: 'post')]
 	public function upload_image(Context $context) {
 		if (is_null($context->upload('image'))) {
@@ -41,7 +42,7 @@ class Recap {
 		}
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/recaps/([^\/]+)')]
 	public function get_recaps_from_agency(string $token) {
 		if (empty($token)) {
@@ -78,7 +79,7 @@ class Recap {
 		];
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/recap/([0-9]+)/([^\/]+)')]
 	public function get_recap_from_id(int $id, string $token) {
 		$monthes = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -126,7 +127,7 @@ class Recap {
 		return $result;
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/recap', method: 'post')]
 	public function send_recap(Context $context, Mailer $mailer) {
 		$monthes = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -203,7 +204,7 @@ class Recap {
 
 			$agency_users = array_map(fn($c) => $c['email'], $agency_users);
 
-			$mail = $mailer->send($agency_users, $html, $object);
+			$mail = \DI\helpers\Timer::create($mailer, 'send', $agency_users, $html, $object);
 
 			if ($mail !== true) {
 				throw new Exception($mail);
@@ -217,7 +218,7 @@ class Recap {
 		}
 	}
 
-	#[Json]
+	#[Timer] #[Json]
 	#[Route('/api/recap/save-template', methods: ['post', 'put'])]
 	public function save_recap_template(Context $context) {
 		$body = $context->body();
