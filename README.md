@@ -113,8 +113,23 @@ namespace DI\decorators;
 use Attribute;
 use DI\bases\AttributeBase;
 
-// for place attribute on 
+// for place attribute on classes, methods, properties, parameters, functions, class constantes
 #[Attribute(Attribute::TARGET_ALL)]
+// for place on classes only
+#[Attribute(Attribute::TARGET_CLASS)]
+// for place on methods only
+#[Attribute(Attribute::TARGET_METHOD)]
+// for place on properties only
+#[Attribute(Attribute::TARGET_PROPERTY)]
+// for place on parameters only
+#[Attribute(Attribute::TARGET_PARAMETER)]
+// for place on functions only
+#[Attribute(Attribute::TARGET_FUNCTION)]
+// for place on class constant only
+#[Attribute(Attribute::TARGET_CLASS_CONSTANT)]
+// for place on classes and methods only
+#[Attribute(Attribute::TARGET_CLASS|Attribute::TARGET_METHOD)]
+// etc
 class MyDecorator extends AttributeBase {
 	public function __construct(...$arguments) {
 		// management
