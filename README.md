@@ -37,3 +37,91 @@ git clone https://github.com/nicolachoquet06250/API-Norsys-Presences.git ?[proje
 cd [project-name]
 composer install
 ```
+
+## CREATE NEW CONTROLLER
+```php
+<?php
+
+namespace DI\[path];
+
+use \DI\decorators\{
+	Route, Json
+};
+use \DI\router\Context;
+
+#[Route('/[path]', methods: ['get', 'post', 'put', 'delete'])]
+class MaRoute {
+	public function __construct(
+		private Context $context
+	) {}
+
+	#[Json]
+	public function get() {
+		return [];
+	}
+
+	#[Json]
+	public function post() {
+		return [];
+	}
+
+	#[Json]
+	public function put() {
+		return [];
+	}
+
+	#[Json]
+	public function delete() {
+		return [];
+	}
+
+	// for add new route in the controller
+	#[Route('/add_route', method: 'get')]
+	#[Json]
+	public function additionnal_method() {
+		return [];
+	}
+}
+```
+
+## CREATE NEW ENUM
+```php
+<?php
+
+namespace DI\enums;
+
+abstract class MyEnum {
+    const VALUE1 = 'value1';
+    const VALUE2 = 'value2';
+}
+
+dump(\DI\helpers\ClassAnalyser::inEnum(MyEnum::class, 'value1'));
+
+// output => true
+
+dump(\DI\helpers\ClassAnalyser::inEnum(MyEnum::class, 'value3'));
+
+// output => false
+```
+
+## CREATE NEW ATTRIBUTE / DECORATOR
+```php
+<?php
+
+namespace DI\decorators;
+
+use Attribute;
+use DI\bases\AttributeBase;
+
+// for place attribute on 
+#[Attribute(Attribute::TARGET_ALL)]
+class MyDecorator extends AttributeBase {
+	public function __construct(...$arguments) {
+		// management
+	}
+
+	public function manage(): void {
+		// management
+	}
+}
+```
