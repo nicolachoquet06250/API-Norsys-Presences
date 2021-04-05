@@ -5,10 +5,12 @@ namespace DI\routes;
 use DateTime;
 use DI\router\Context;
 use DI\decorators\{
-	Route, Scripts, Stylesheets
+	Route, Scripts, Stylesheets,
+    Title
 };
 
 #[Route('/debug')]
+#[Title('Debug')]
 #[Scripts(['https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js'])]
 #[Stylesheets(['https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css'])]
 class Debug {
