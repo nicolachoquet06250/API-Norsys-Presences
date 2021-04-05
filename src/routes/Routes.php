@@ -2,9 +2,9 @@
 
 namespace DI\routes;
 
-use DI\decorators\Json;
-use DI\decorators\Route;
-use DI\decorators\Timer;
+use DI\decorators\{
+	Json, Route, Timer
+};
 use DI\router\Route as Router;
 
 #[Timer] #[Json]
