@@ -8,7 +8,7 @@ api norsys presences portée en php 8
 	"DEBUG": false,
 
 	"#VIEW_ENGINE_CONFIGS": "",
-	"VIEW_ENGINE": "\\DI\\enums\\ViewEngines::BLADE|\\DI\\enums\\ViewEngines::SMART",
+	"VIEW_ENGINE": "\\DI\\enums\\ViewEngines::BLADE|\\DI\\enums\\ViewEngines::SMARTY",
 	"VIEW_DIR": "__ROOT__ . /app/views",
 	"VIEW_CACHE_DIR": "__ROOT__ . /app/views/cache",
 
