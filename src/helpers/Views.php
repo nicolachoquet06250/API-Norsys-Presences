@@ -65,10 +65,25 @@ class Views implements ViewAdapter {
         return Timer::create($this->viewEngine, 'make', $vars);
     }
 
-    public static function addInstance(string $target, string $method, string $tpl): self {
+    public static function addInstance(string $target, string $method, string $tpl, ?string $engine = null): array {
         $method = $method === '' ? 'global' : $method;
 
-        static::$instances[$target][$method] = Timer::create(
+        if (!is_null($engine) && !ClassAnalyser::inEnum(ViewEngines::class, $engine)) {
+            throw new \TypeError("`type` parameter is not in ViewEngines enum");
+        }
+
+        if (is_null($engine)) {
+            $engine = constant('VIEW_ENGINE');
+        }
+
+        static::$instances[$target][$method] = [
+            'view_engine' => $engine,
+            'view_dir' => constant('VIEW_DIR'),
+            'view_cache_dir' => constant('VIEW_CACHE_DIR'),
+            'tpl' => $tpl,
+            'instance' => null
+        ];
+        /*Timer::create(
             Timer::create(
                 Views::class, 
                 '__construct', 
@@ -76,7 +91,7 @@ class Views implements ViewAdapter {
             ), 
             'setTpl', 
             $tpl
-        );
+        );*/
         return static::$instances[$target][$method];
     }
 
@@ -101,8 +116,20 @@ class Views implements ViewAdapter {
         return static::$instances;
     }
 
+    public static function setInstance(string $target, string $method): self {
+        static::$instances[$target][$method]['instance'] = Timer::create(
+            Timer::create(
+                Views::class, 
+                '__construct', 
+                static::$instances[$target][$method]['view_dir'], static::$instances[$target][$method]['view_cache_dir'], static::$instances[$target][$method]['view_engine']
+            ), 
+            'setTpl', 
+            static::$instances[$target][$method]['tpl']
+        );
+        return static::$instances[$target][$method]['instance'];
+    }
+
     public function __call($name, $arguments) {
-        return Timer::create($this->viewEngine, $name, $arguments);
-        //return $this->viewEngine->{$name}(...$arguments);
+        return Timer::create($this->viewEngine, $name, ...$arguments);
     }
 }

@@ -3,6 +3,7 @@
 namespace DI\decorators;
 
 use Attribute;
+use DateTime;
 use DI\helpers\{
     Views,
     HeaderBuilder,
@@ -23,7 +24,10 @@ class Route extends AttributeBase {
     private function manage_directive($detail) {
         if (isset($detail[$this->target][$this->isMethod() ? $this->methodName : 'global'])) {
             foreach ($detail[$this->target][$this->isMethod() ? $this->methodName : 'global'] as $name => $callback) {
-                Views::instances()[$this->target][$this->isMethod() ? $this->methodName : 'global']->directive($name, fn(...$expr) => $callback(...$expr));
+                if (!is_null(Views::instances()[$this->target][$this->isMethod() ? $this->methodName : 'global']['instance'])) {
+                    Views::instances()[$this->target][$this->isMethod() ? $this->methodName : 'global']['instance']
+                        ->directive($name, fn(...$expr) => $callback(...$expr));
+                }
             }
         }
     }
@@ -51,20 +55,22 @@ class Route extends AttributeBase {
                 $obj = \DI\helpers\Timer::create($this->target, '__construct', ...$parameters);
                 $headerBuilder = HeaderBuilder::getBuilder($this->target, $this->methodName);
 
-                foreach (Views::customizedElement() as $engine => $detail) {
-                    foreach ($detail as $type => $elems) {
-                        if (method_exists($this, "manage_$type")) {
-                            call_user_func([$this, "manage_$type"], $elems);
-                        }
-                    }
-                }
-
                 $result = \DI\helpers\Timer::create($obj, $this->methodName, ...$parameters);
                 if (is_array($result) && isset(Views::instances()[$this->target][$this->methodName])) {
-                    /** @var ViewAdapter $view */
-                    $view = Views::instances()[$this->target][$this->methodName];
                     $result = array_merge($headerBuilder->build(forViewEngine: true), $result);
-                    echo \DI\helpers\Timer::create($view, 'make', $result);
+                    Views::setInstance($this->target, $this->methodName);
+
+                    foreach (Views::customizedElement() as $engine => $detail) {
+                        foreach ($detail as $type => $elems) {
+                            if (method_exists($this, "manage_$type")) {
+                                $this->{"manage_$type"}($elems);
+                            }
+                        }
+                    }
+
+                    /** @var array $view */
+                    $view = Views::instances()[$this->target][$this->methodName];
+                    echo \DI\helpers\Timer::create($view['instance'], 'make', $result);
                 } elseif (is_array($result) && !isset(Views::instances()[$this->target][$this->methodName]) && !$isJson) {
                     dump($result);
                 } elseif (is_array($result) && !isset(Views::instances()[$this->target][$this->methodName]) && $isJson) {
@@ -84,15 +90,23 @@ class Route extends AttributeBase {
                     $isJsonForMethods = empty(JsonPages::jsonPages()[$this->target]['global']) ? [] : JsonPages::jsonPages()[$this->target]['global'];
                     $isJson = in_array($this->method, $isJsonForMethods);
 
-                    $injectionContainer = new InjectionContainer();
                     $obj = \DI\helpers\Timer::create($this->target, '__construct', ...$parameters);
                     $headerBuilder = HeaderBuilder::getBuilder($this->target, 'global');
 
                     $result = \DI\helpers\Timer::create($obj, $method, ...$parameters);
                     if (is_array($result) && isset(Views::instances()[$this->target][$method])) {
+                        $result = array_merge($headerBuilder->build(forViewEngine: true), $result);
+                        Views::setInstance($this->target, '__construct');
+    
+                        foreach (Views::customizedElement() as $engine => $detail) {
+                            foreach ($detail as $type => $elems) {
+                                if (method_exists($this, "manage_$type")) {
+                                    call_user_func([$this, "manage_$type"], $elems);
+                                }
+                            }
+                        }
                         /** @var ViewAdapter $view */
                         $view = Views::instances()[$this->target][$method];
-                        $result = array_merge($headerBuilder->build(forViewEngine: true), $result);
                         \DI\helpers\Timer::create($view, 'make', $result);
                     } elseif (is_array($result) && !isset(Views::instances()[$this->target]['global']) && !$isJson) {
                         dump($result);

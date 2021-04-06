@@ -16,7 +16,19 @@ use DI\decorators\{
 class Debug {
 	public function get(Context $context) {
 		$debug_times = json_decode($context->session('debug_time'), true);
+		if (is_null($debug_times)) {
+			$debug_times = [];
+		}
 		$tbody = '';
+		
+		if (empty($debug_times)) {
+			$tbody = <<<HTML
+				<tr>
+					<th colspan="3">Le debug est desactivé</th>
+				</tr>
+			HTML;
+		}
+
 		foreach ($debug_times as $class => $method_detail) {
 			foreach ($method_detail as $method_name => $method_time) {
 				$tbody .= <<<HTML

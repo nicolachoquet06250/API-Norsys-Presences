@@ -44,6 +44,11 @@ class Blade implements ViewAdapter {
         return (string)$view;
     }
 
+    #[Timer]
+    public function directive(string $name, callable $callback): void {
+        $this->engine->directive($name, $callback);
+    }
+
     public function __call($name, $arguments) {
         return $this->engine->{$name}(...$arguments);
     }

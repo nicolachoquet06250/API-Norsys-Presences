@@ -40,7 +40,7 @@ class Home {
     }
 
     #[Timer]
-    #[Route('/test')] #[View('test')]
+    #[Route('/test/default-engine')] #[View('test')]
     #[Directive('datetime', 'Directive::datetime')]
 
     #[Title('Titre de ma page avec un gestionnaire de templates')]
@@ -52,7 +52,7 @@ class Home {
     }
 
     #[Timer]
-    #[Route('/test-2')]
+    #[Route('/test/smarty-engine')]
     #[View('test', ViewEngines::SMARTY)]
     public function test2() {
         return [

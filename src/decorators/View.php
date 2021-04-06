@@ -15,9 +15,10 @@ class View extends AttributeBase {
 
     public function manage(): void {
         $method = $this->isMethod() ? $this->methodName : 'global';
-        $view = Views::addInstance($this->target, $method, $this->tpl);
-        if (!is_null($this->engine)) {
-            $view->setEngine($this->engine);
+        if (is_null($this->engine)) {
+            Views::addInstance($this->target, $method, $this->tpl);
+        } else {
+            Views::addInstance($this->target, $method, $this->tpl, $this->engine);
         }
     }
 }
