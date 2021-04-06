@@ -140,3 +140,17 @@ class MyDecorator extends AttributeBase {
 	}
 }
 ```
+
+## ANNEXES
+
+### DOCS
+ - [DOC BLADE PHP](https://github.com/jenssegers/blade)
+ - [DOC SMARTY PHP](https://www.smarty.net/docsv2/fr/)
+ - [DOC PHP](https://php.net)
+ - [DOC BOOTSTRAP V5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+ - [DOC LIB steampixel/simplePHPRouter](https://github.com/steampixel/simplePHPRouter)
+
+### ARTICLES
+ - [PHP 8](https://platform.sh/blog/2020/php-8-0-feature-focus-attributes/)
+ - [L'injection de dépendence en php](https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMF-208/Demystifier-l-injection-de-dependances-en-PHP)
+ - [Les attributs en php 8](https://stitcher.io/blog/attributes-in-php-8)
